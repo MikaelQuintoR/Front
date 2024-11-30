@@ -1,9 +1,9 @@
-import axiosInstance from "../utils/AxiosInstance";
+import axiosInstance from "../Utils/AxiosInstance";
 
-// Register
-export const register = async (data: { email: string; password: string }): Promise<unknown> => {
+// Register - Registrar un nuevo usuario en el sistema. Recibe los datos del usuario (nombre, apellido, correo, contraseña).
+export const register = async (data: { name: string, lastname: string, email: string; password: string }): Promise<unknown> => {
     try {
-        const response = await axiosInstance.post('/api/auth/register', data);
+        const response = await axiosInstance.post('/api/register', data);
         return response.data;
     } catch (error) {
         console.error('Error al registrar:', error);
@@ -14,7 +14,7 @@ export const register = async (data: { email: string; password: string }): Promi
 // Login
 export const login = async (data: { email: string; password: string }): Promise<unknown> => {
     try {
-        const response = await axiosInstance.post('/api/auth/login', data);
+        const response = await axiosInstance.post('/api/login', data);
         return response.data;
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
