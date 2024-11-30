@@ -50,7 +50,7 @@ export const createChat = async (data: { name: string }): Promise<unknown> => {
 };
 
 //GET - Recupera los mensajes de un chat específico
-export const getChatMessages = async (chatId: number): Promise<unknown> => {
+export const getChatMessages = async (chatId: number): Promise<string[]> => {
     try {
         const response = await axiosInstance.get(`/api/chats/${chatId}`);
         return response.data;
@@ -61,7 +61,7 @@ export const getChatMessages = async (chatId: number): Promise<unknown> => {
 };
 
 // POST - Envía un mensaje en un chat
-export const sendMessage = async (data: { content: string; chatId: number; aiModel: string }): Promise<unknown> => {
+export const sendMessage = async (data: { content: string; chatId: number, aiModel: string }): Promise<unknown> => {
     try {
         const response = await axiosInstance.post('/api/messages', data);
         return response.data;

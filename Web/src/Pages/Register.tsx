@@ -15,15 +15,12 @@ export default function Register() {
     try {
       // Llamar a la función de registro desde Auth.ts
       const data = await register({ name, lastname: '', email, password }); // Ajustar según estructura del backend
+      setStep(2); // Cambiar al siguiente paso
 
-      console.log("Respuesta del servidor:", data);
 
-      if (data) {
-        alert('Usuario registrado exitosamente');
-        setStep(2); // Cambiar al siguiente paso
-      } else {
-        alert('Error al registrar el usuario. Intenta nuevamente.');
-      }
+
+
+      
     } catch (error: any) {
       console.error("Error al registrar:", error);
       alert(error.message || "Hubo un problema al conectar con el servidor.");

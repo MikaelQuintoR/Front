@@ -1,5 +1,5 @@
 export interface User{
-    id:number
+    id?:number
     firstName: string
     lastName: string
     email:string
@@ -7,14 +7,14 @@ export interface User{
 }
 
 export interface Chat{
-    id:number
+    id?:number
     userId: number
     chatName: string
     dateCreation: number
 }
 
 export interface Message{
-    id: number
+    id?: number
     chatId: number
     Sender: "USER" | "AI"
     Content: string;
