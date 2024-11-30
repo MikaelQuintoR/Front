@@ -1,21 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { getChats, createChat, getChatMessages, sendMessage } from '../Service/IA';
 
+interface Chat {
+  id: string;
+  name: string;
+}
+
+interface Message {
+  id: string;
+  content: string;
+  sender: 'user' | 'bot';
+}
+
 const ChatbotPage = () => {
-  const [chats, setChats] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [chatName, setChatName] = useState('');
+  const [chats, setChats] = useState<Chat[]>([]);  // Especificamos el tipo de chats
+  const [selectedChat, setSelectedChat] = useState<string | null>(null);  // El chat seleccionado es un string o null
+  const [messages, setMessages] = useState<Message[]>([]);  // Especificamos el tipo de mensajes
+  const [newMessage, setNewMessage] = useState<string>('');
+  const [chatName, setChatName] = useState<string>('');
 
   useEffect(() => {
-    // Obtener todos los chats al cargar la página
     const fetchChats = async () => {
       try {
         const chatData = await getChats();
-        setChats(chatData);
+        // Verifica que chatData sea un array
+        if (Array.isArray(chatData)) {
+          setChats(chatData);  // Se asigna correctamente si chatData es un array
+        } else {
+          console.error('Los datos de los chats no son un array', chatData);
+        }
       } catch (error) {
-        console.error('Error', error);
+        console.error('Error al obtener los chats:', error);
       }
     };
 
@@ -23,14 +38,18 @@ const ChatbotPage = () => {
   }, []);
 
   useEffect(() => {
-    // Si hay un chat seleccionado, obtener los mensajes de ese chat
     const fetchMessages = async () => {
       if (selectedChat) {
         try {
           const messagesData = await getChatMessages(selectedChat);
-          setMessages(messagesData);
+          // Verifica que messagesData sea un array
+          if (Array.isArray(messagesData)) {
+            setMessages(messagesData);  // Asignamos el array de mensajes
+          } else {
+            console.error('Los datos de los mensajes no son un array', messagesData);
+          }
         } catch (error) {
-            console.error('Error', error);
+          console.error('Error al obtener los mensajes del chat:', error);
         }
       }
     };
@@ -42,10 +61,12 @@ const ChatbotPage = () => {
     if (chatName.trim()) {
       try {
         const newChat = await createChat({ name: chatName });
-        setChats([...chats, newChat]);
+        if (newChat && Array.isArray(chats)) {
+          setChats([...chats, newChat]);  // Se añade un nuevo chat correctamente
+        }
         setChatName('');
       } catch (error) {
-        console.error('Error', error);
+        console.error('Error al crear el chat:', error);
       }
     }
   };
@@ -59,10 +80,13 @@ const ChatbotPage = () => {
       };
       try {
         const response = await sendMessage(messageData);
-        setMessages([...messages, response.data]); // Asumimos que `response.data` es el nuevo mensaje
+        // Verifica que response.data sea el mensaje adecuado
+        if (response.data && Array.isArray(messages)) {
+          setMessages([...messages, response.data]);  // Se agrega el mensaje a la lista
+        }
         setNewMessage('');
       } catch (error) {
-        console.error('Error', error);
+        console.error('Error al enviar el mensaje:', error);
       }
     }
   };
@@ -92,8 +116,8 @@ const ChatbotPage = () => {
         <div className="chat-box">
           <h3>Chat Seleccionado</h3>
           <div className="messages">
-            {messages.map((msg, index) => (
-              <div key={index} className={msg.sender === 'user' ? 'user-message' : 'bot-message'}>
+            {messages.map((msg) => (
+              <div key={msg.id} className={msg.sender === 'user' ? 'user-message' : 'bot-message'}>
                 <p>{msg.content}</p>
               </div>
             ))}
