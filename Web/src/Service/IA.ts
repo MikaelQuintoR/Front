@@ -43,3 +43,6 @@ export const sendMessage = async (data: { content: string; chatId: string; aiMod
         throw new Error('Error al enviar el mensaje. Por favor, intenta nuevamente.');
     }
 };
+
+
+export default { getChats, createChat, getChatMessages, sendMessage };
