@@ -1,62 +1,32 @@
 import { useState } from 'react';
+import { register } from "../Api/Auth"; // Importar la función de registro
 
 export default function Register() {
+  const [step, setStep] = useState(1); // Estado para manejar los pasos del formulario
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('client');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [step, setStep] = useState(1); // Estado para manejar el flujo de pasos
 
   const handleRegister = async (event: React.FormEvent) => {
-    event.preventDefault();  // Prevenir recarga de la página al enviar el formulario
+    event.preventDefault(); // Prevenir recarga de la página
 
     try {
-      const response = await fetch('https://nn1h052dp5.execute-api.us-east-2.amazonaws.com/v1/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password, role }), // Enviar los primeros datos
-      });
+      // Llamar a la función de registro desde Auth.ts
+      const data = await register({ name, lastname: '', email, password }); // Ajustar según estructura del backend
 
-      const data = await response.json();  // Obtener respuesta
+      console.log("Respuesta del servidor:", data);
 
-      if (response.ok) {
-        setStep(2); // Si la primera parte fue exitosa, muestra el siguiente paso para completar el registro
-      } else {
-        console.log(data); // Para depurar la respuesta
-        alert(data.message || 'Error al crear el usuario');
-      }
-    } catch (error) {
-      console.error("Error al intentar crear usuario:", error);
-      alert("Hubo un error en la conexión al servidor");
-    }
-  };
-
-  const handleCompleteRegistration = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    try {
-      // Realizar la solicitud para completar el registro con nombre y correo
-      const response = await fetch('https://nn1h052dp5.execute-api.us-east-2.amazonaws.com/v1/auth/register-complete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, username, password, role }), // Incluir todos los datos necesarios
-      });
-
-      const data = await response.json();
-      if (response.ok) {
+      if (data) {
         alert('Usuario registrado exitosamente');
+        setStep(2); // Cambiar al siguiente paso
       } else {
-        alert('Error al completar el registro');
-        console.log(data);
+        alert('Error al registrar el usuario. Intenta nuevamente.');
       }
-    } catch (error) {
-      console.error("Error al completar el registro:", error);
-      alert("Hubo un error al intentar completar el registro");
+    } catch (error: any) {
+      console.error("Error al registrar:", error);
+      alert(error.message || "Hubo un problema al conectar con el servidor.");
     }
   };
 
@@ -68,9 +38,17 @@ export default function Register() {
           <form onSubmit={handleRegister} className="space-y-4">
             <input
               type="text"
-              placeholder="Nombre de usuario"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Nombre completo"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+            <input
+              type="email"
+              placeholder="Correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -94,38 +72,15 @@ export default function Register() {
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
             >
-              Continuar con el registro
+              Registrar
             </button>
           </form>
         </>
       ) : (
-        <>
-          <h2 className="text-2xl font-bold text-center mb-4">Completa tu registro</h2>
-          <form onSubmit={handleCompleteRegistration} className="space-y-4">
-            <input
-              type="text"
-              placeholder="Nombre completo"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            <input
-              type="email"
-              placeholder="Correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            <button
-              type="submit"
-              className="w-full bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition"
-            >
-              Completar registro
-            </button>
-          </form>
-        </>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">¡Registro completo!</h2>
+          <p className="text-gray-700">Ahora puedes iniciar sesión con tus credenciales.</p>
+        </div>
       )}
     </div>
   );
