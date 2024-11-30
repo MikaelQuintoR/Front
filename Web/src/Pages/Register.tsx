@@ -14,7 +14,7 @@ export default function Register() {
 
     try {
       // Llamar a la función de registro desde Auth.ts
-      const data = await register({ name, lastname: '', email, password }); // Ajustar según estructura del backend
+      const data = await register({ firstName: '', lastName: '', email, password }); // Ajustar según estructura del backend
       setStep(2); // Cambiar al siguiente paso
 
 

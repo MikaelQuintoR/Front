@@ -3,23 +3,20 @@ import { useState, useEffect } from "react";
 // Importar las funciones necesarias para interactuar con los endpoints
 import { getChats, createChat, getChatMessages, sendMessage } from "../Service/IA";
 
-// Interfaces importadas
-export interface Chat {
-  id?: number;
-  userId: number;
-  chatName: string;
-  dateCreation: number;
+export interface Chat{
+  id?:number
+  userId?: number
+  chatName: string
+  dateCreation: number
 }
 
-export interface Message {
-  id?: number;
-  chatId: number;
-  Sender: "USER" | "AI";
+export interface Message{
+  id?: number
+  chatId?: number
+  Sender: "USER" | "AI"
   Content: string;
-  Timestamp: number;
-  aiModel: "GPT_3" | "GPT_4" | "OTHER";
+  Timestamp: number
 }
-
 export default function ChatPage() {
   const [token] = useState(localStorage.getItem("token")); // Recuperar el token desde localStorage
   const [chats, setChats] = useState<Chat[]>([]); // Lista de chats con el tipo Chat
