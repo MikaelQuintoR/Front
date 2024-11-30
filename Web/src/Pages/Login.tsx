@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { login } from "../Api/Auth"; // Importar la función de login desde la API
+import { login } from "../Api/Auth"; // Asegúrate de que la ruta sea correcta
 
 export default function Login() {
   const [email, setEmail] = useState(''); // Cambiado a "email" en lugar de "username"
@@ -11,21 +11,21 @@ export default function Login() {
     console.log("Datos de Login:", { email, password });
 
     try {
-      // Llamada a la función de login de la API
-      const data = await login({ email, password });
+      // Llamada a la función de login desde Auth.ts
+      const data: any = await login({ email, password });
 
       console.log("Respuesta del servidor:", data); // Muestra la respuesta completa
 
-      if (data.token) { // Si el servidor devuelve un token
-        localStorage.setItem('token', data.token);
+      if (data && data.token) { // Validar si existe un token en la respuesta
+        localStorage.setItem('token', data.token); // Guardar el token en el almacenamiento local
         setIsLoggedIn(true);
         alert('Inicio de sesión exitoso');
       } else {
-        alert('Credenciales inválidas o error en la respuesta');
+        alert('Credenciales inválidas o error en la respuesta del servidor');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error al intentar iniciar sesión:", error);
-      alert("Hubo un error en la conexión al servidor");
+      alert(error.message || "Hubo un error en la conexión al servidor");
     }
   };
 
@@ -34,8 +34,8 @@ export default function Login() {
       <h2 className="text-2xl font-bold text-center mb-4">Iniciar Sesión</h2>
       <form onSubmit={handleLogin} className="space-y-4">
         <input
-          type="text"
-          placeholder="Nombre de usuario"
+          type="email" // Cambiado a "email" para indicar que es un correo electrónico
+          placeholder="Correo electrónico"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
