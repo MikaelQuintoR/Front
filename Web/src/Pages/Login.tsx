@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { login } from "../Utils/AxiosInstance"; // Importar la función de login desde la API
+import { login } from "../Api/Auth"; // Importar la función de login desde la API
 
 export default function Login() {
   const [email, setEmail] = useState(''); // Cambiado a "email" en lugar de "username"
