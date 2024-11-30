@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { register } from "../Api/Auth"; // Importar la función de registro
+import { register } from "../Service/Auth"; // Importar la función de registro
 
 export default function Register() {
   const [step, setStep] = useState(1); // Estado para manejar los pasos del formulario

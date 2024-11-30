@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { login } from "../Api/Auth"; // Asegúrate de que la ruta sea correcta
+import { login } from "../Service/Auth"; // Asegúrate de que la ruta sea correcta
 
 export default function Login() {
   const [email, setEmail] = useState(''); // Cambiado a "email" en lugar de "username"
