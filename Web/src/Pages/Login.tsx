@@ -1,36 +1,31 @@
 import { useState } from 'react';
+import { login } from "../Api/Auth"; // Asegúrate de que la ruta sea correcta
 
 export default function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState(''); // Cambiado a "email" en lugar de "username"
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();  // Prevenir recarga de la página al enviar el formulario
-    console.log("Datos de Login:", { username, password });
+    event.preventDefault(); // Prevenir recarga de la página al enviar el formulario
+    console.log("Datos de Login:", { email, password });
 
     try {
-      const response = await fetch('https://nn1h052dp5.execute-api.us-east-2.amazonaws.com/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
+      // Llamada a la función de login desde Auth.ts
+      const data: any = await login({ email, password });
 
-      const data = await response.json();
       console.log("Respuesta del servidor:", data); // Muestra la respuesta completa
 
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
+      if (data && data.token) { // Validar si existe un token en la respuesta
+        localStorage.setItem('token', data.token); // Guardar el token en el almacenamiento local
         setIsLoggedIn(true);
+        alert('Inicio de sesión exitoso');
       } else {
-        console.log(`Error ${response.status}: ${data.message || 'Credenciales inválidas'}`);
-        alert('Error en las credenciales');
+        alert('Credenciales inválidas o error en la respuesta del servidor');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error al intentar iniciar sesión:", error);
-      alert("Hubo un error en la conexión al servidor");
+      alert(error.message || "Hubo un error en la conexión al servidor");
     }
   };
 
@@ -39,10 +34,10 @@ export default function Login() {
       <h2 className="text-2xl font-bold text-center mb-4">Iniciar Sesión</h2>
       <form onSubmit={handleLogin} className="space-y-4">
         <input
-          type="text"
-          placeholder="Nombre de usuario"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email" // Cambiado a "email" para indicar que es un correo electrónico
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
