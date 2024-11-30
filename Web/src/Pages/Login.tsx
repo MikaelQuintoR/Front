@@ -1,32 +1,27 @@
 import { useState } from 'react';
+import { login } from "../Utils/AxiosInstance"; // Importar la función de login desde la API
 
 export default function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState(''); // Cambiado a "email" en lugar de "username"
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();  // Prevenir recarga de la página al enviar el formulario
-    console.log("Datos de Login:", { username, password });
+    event.preventDefault(); // Prevenir recarga de la página al enviar el formulario
+    console.log("Datos de Login:", { email, password });
 
     try {
-      const response = await fetch('https://nn1h052dp5.execute-api.us-east-2.amazonaws.com/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
+      // Llamada a la función de login de la API
+      const data = await login({ email, password });
 
-      const data = await response.json();
       console.log("Respuesta del servidor:", data); // Muestra la respuesta completa
 
-      if (response.ok) {
+      if (data.token) { // Si el servidor devuelve un token
         localStorage.setItem('token', data.token);
         setIsLoggedIn(true);
+        alert('Inicio de sesión exitoso');
       } else {
-        console.log(`Error ${response.status}: ${data.message || 'Credenciales inválidas'}`);
-        alert('Error en las credenciales');
+        alert('Credenciales inválidas o error en la respuesta');
       }
     } catch (error) {
       console.error("Error al intentar iniciar sesión:", error);
@@ -41,8 +36,8 @@ export default function Login() {
         <input
           type="text"
           placeholder="Nombre de usuario"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
