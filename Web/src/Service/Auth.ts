@@ -1,5 +1,5 @@
 import axiosInstance from "../Utils/AxiosInstance";
-import { User } from "../Interfaces/Interfaz";
+import { User } from "../interfaces/Interfaz";
 
 // Register - Registrar un nuevo usuario en el sistema. Recibe los datos del usuario (nombre, apellido, correo, contraseña).
 export const register = async (user: User) => {

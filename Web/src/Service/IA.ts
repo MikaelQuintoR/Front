@@ -1,6 +1,6 @@
 import axiosInstance from "../Utils/AxiosInstance";
 import { getToken } from "./Auth";
-import { Chat, Message } from "../Interfaces/Interfaz";
+import { Chat, Message } from "../interfaces/Interfaz";
 
 // GET - Recupera todos los chats asociados al usuario autenticado
 export const getChats = async () => {
