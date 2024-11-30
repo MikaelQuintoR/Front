@@ -4,7 +4,7 @@ import { User } from "../interfaces/Interfaz";
 // Register - Registrar un nuevo usuario en el sistema. Recibe los datos del usuario (nombre, apellido, correo, contraseña).
 export const register = async (user: User) => {
     try {
-        const response = await axiosInstance.post('/api/register', user);
+        const response = await axiosInstance.post('/auth/register', user);
         
         // Comprobamos que la respuesta contenga el token
         if (response.data.token) {
@@ -26,7 +26,7 @@ export const getToken = () => {
 // Login - Iniciar sesión de usuario
 export const login = async (data: { email: string; password: string }) => {
     try {
-        const response = await axiosInstance.post('/api/login', data);
+        const response = await axiosInstance.post('/auth/login', data);
         // Comprobamos que la respuesta contenga el token
         
         if (response.data.token) {
