@@ -1,8 +1,9 @@
 import axiosInstance from "../Utils/AxiosInstance";
 import { getToken } from "./Auth";
+import { Chat, Message } from "../Interfaces/Interfaz";
 
 // GET - Recupera todos los chats asociados al usuario autenticado
-export const getChats = async (): Promise<unknown> => {
+export const getChats = async () => {
     const token = getToken();
 
     // Si no hay token, retorna un error sencillo
@@ -18,7 +19,7 @@ export const getChats = async (): Promise<unknown> => {
             },
         });
         
-        return response.data; // Retorna los datos obtenidos
+        return response.data as Chat[]; // Aseguramos que la respuesta es un arreglo de chats
 
     } catch (error) {
         console.error('Error al obtener los chats:', error);
@@ -27,7 +28,7 @@ export const getChats = async (): Promise<unknown> => {
 };
 
 // POST - Crea un nuevo chat asociado al usuario autenticado
-export const createChat = async (data: { name: string }): Promise<unknown> => {
+export const createChat = async (data: { name: string }) => {
     const token = getToken(); // Obtener el token almacenado en localStorage
 
     if (!token) {
@@ -42,18 +43,18 @@ export const createChat = async (data: { name: string }): Promise<unknown> => {
             },
         });
 
-        return response.data; // Retorna los datos obtenidos (el nuevo chat creado)
+        return response.data as Chat; // Aseguramos que la respuesta es un solo chat creado
     } catch (error) {
         console.error('Error al crear un chat:', error);
         throw new Error('Error al crear el chat. Por favor, intenta nuevamente.');
     }
 };
 
-//GET - Recupera los mensajes de un chat específico
-export const getChatMessages = async (chatId: number): Promise<string[]> => {
+// GET - Recupera los mensajes de un chat específico
+export const getChatMessages = async (chatId: number) => {
     try {
         const response = await axiosInstance.get(`/api/chats/${chatId}`);
-        return response.data;
+        return response.data as Message[]; // Aseguramos que la respuesta es un arreglo de mensajes
     } catch (error) {
         console.error('Error al obtener los mensajes del chat:', error);
         throw new Error('Error al recuperar los mensajes del chat. Por favor, intenta nuevamente.');
@@ -61,10 +62,10 @@ export const getChatMessages = async (chatId: number): Promise<string[]> => {
 };
 
 // POST - Envía un mensaje en un chat
-export const sendMessage = async (data: { content: string; chatId: number, aiModel: string }): Promise<unknown> => {
+export const sendMessage = async (data: { content: string; chatId: number; aiModel: string }) => {
     try {
         const response = await axiosInstance.post('/api/messages', data);
-        return response.data;
+        return response.data as Message; // Aseguramos que la respuesta es un mensaje
     } catch (error) {
         console.error('Error al enviar el mensaje:', error);
         throw new Error('Error al enviar el mensaje. Por favor, intenta nuevamente.');
