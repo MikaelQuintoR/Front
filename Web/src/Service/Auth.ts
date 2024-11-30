@@ -5,6 +5,8 @@ import { User } from "../Interfaces/Interfaz";
 export const register = async (user: User) => {
     try {
         const response = await axiosInstance.post('/api/register', user);
+        
+        // Comprobamos que la respuesta contenga el token
         if (response.data.token) {
             localStorage.setItem("token", response.data.token as string); // Guardamos el token si está presente
         } else {
@@ -17,7 +19,7 @@ export const register = async (user: User) => {
 };
 
 // GET - Obtener token almacenado en localStorage
-export const getToken = (): string | null => {
+export const getToken = () => {
     return localStorage.getItem("token"); // Retorna el token almacenado, o null si no existe
 };
 
@@ -25,6 +27,8 @@ export const getToken = (): string | null => {
 export const login = async (data: { email: string; password: string }) => {
     try {
         const response = await axiosInstance.post('/api/login', data);
+        // Comprobamos que la respuesta contenga el token
+        
         if (response.data.token) {
             localStorage.setItem("token", response.data.token as string); // Guardamos el token si está presente
         } else {

@@ -19,5 +19,4 @@ export interface Message{
     Sender: "USER" | "AI"
     Content: string;
     Timestamp: number
-    aiModel: "GPT_3" | "GPT_4" | "OTHER"
 }
