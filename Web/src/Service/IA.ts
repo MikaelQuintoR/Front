@@ -72,4 +72,4 @@ export const sendMessage = async (data: { content: string; chatId: number; aiMod
     }
 };
 
-export default { getChats, createChat, getChatMessages, sendMessage };
+export default { getChats, createChat, getChatMessages, sendMessage }; 
